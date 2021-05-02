@@ -24,7 +24,7 @@
             <form method="POST" action="Autentication">
                 <div class="mb-3">
                     <label for="userInput" class="form-label">Usuario</label>
-                    <input type="text" class="form-control" id="userInput" name="userInput" aria-describedby="emailHelp">
+                    <input type="text" class="form-control" id="userInput" name="userInput" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
