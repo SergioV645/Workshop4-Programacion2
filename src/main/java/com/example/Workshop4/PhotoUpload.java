@@ -11,6 +11,9 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 @WebServlet(name = "PhotoUpload", value = "/PhotoUpload")
 @MultipartConfig
 public class PhotoUpload extends HttpServlet {
@@ -24,6 +27,7 @@ public class PhotoUpload extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        /*
         ManageFile m= new ManageFile();
         m.setUserId(request.getParameter("userId"));
         m.setDate(request.getParameter("date"));
@@ -34,6 +38,43 @@ public class PhotoUpload extends HttpServlet {
         //String json= new Gson().toJson(m);
         //response.getWriter().println(m.saveUserInfo("user.txt"));
         response.sendRedirect("ShowPhotos.jsp");
+
+         */
+
+        //get the path of the photos folder
+        Part f= request.getPart("photoForm");
+        File uploadDir = new File("Photos");
+        if (!uploadDir.exists()) uploadDir.mkdir();
+        String uploadPath = uploadDir.getAbsolutePath();
+        //1-response.getWriter().println(uploadPath);
+        //change the name of the photo uploaded, give the id
+        String absolutePath= uploadPath+File.separator+f.getSubmittedFileName();
+        File old=new File(absolutePath);
+        //2-response.getWriter().println(old.getAbsolutePath());
+        f.write(old.getAbsolutePath());
+        ManageFile m= new ManageFile();
+        m.setPhotoId(m.setPId("user.json"));
+        if(!m.getPhotoId().equals("ERROR")){
+            absolutePath= uploadPath+File.separator;
+            //3-
+            response.getWriter().println(absolutePath);
+            File n= new File(absolutePath+m.getPhotoId()+m.getExtension(old.getAbsolutePath()));
+            //4-
+            response.getWriter().println(n.getAbsolutePath());
+            if(m.renameFile(old, n)){
+                //make json file
+                m.setUserId(request.getParameter("userId"));
+                m.setDescription(request.getParameter("description"));
+                m.setDate(request.getParameter("date"));
+                m.setPhoto(absolutePath);
+                //5-
+                response.getWriter().println(m.saveUserInfo("user.json"));
+            }else{
+                response.getWriter().println("error renaming file");
+            }
+        }else{
+            response.getWriter().println("error setting photo id");
+        }
 
 
 

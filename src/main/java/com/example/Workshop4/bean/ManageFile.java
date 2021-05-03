@@ -1,45 +1,120 @@
 package com.example.Workshop4.bean;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
+
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class ManageFile implements Serializable {
 
+    @Expose
     private String userId;
+    @Expose
     private String description;
+    @Expose
     private String date;
+    @Expose
     private String photo;
+    @Expose
+    private String photoId;
     private String[] usersId;
     private String[] descriptions;
     private String[] dates;
     private String[] photos;
     private String[] photosId;
     private int numberOfUsers;
-    private String path;
     private final String sep= ";";
 
     public ManageFile(){
     }
 
+    public ManageFile(String userId, String description, String date, String photo) {
+        this.userId = userId;
+        this.description = description;
+        this.date = date;
+        this.photo = photo;
+    }
+
     public String saveUserInfo(String path){
         try {
-            this.path=path;
             File f= new File(path);
             FileWriter w= new FileWriter(f, true);
             BufferedWriter bw = new BufferedWriter(w);
-            if(f.createNewFile()){
-                bw.write(getUserId()+sep+getDate()+sep+getDescription()+sep+getPhoto());
-            }else{
-                bw.write(getUserId()+sep+getDate()+sep+getDescription()+sep+getPhoto());
-            }
+            Gson gson= new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+            gson.toJson(this, bw);
             bw.newLine();
             bw.close();
             w.close();
             return  f.getAbsolutePath();
         }catch(IOException e){
             return "error"+e.getMessage();
+        }
+    }
+    public boolean createFile(String path){
+        try{
+            File f= new File(path);
+            f.createNewFile();
+            return true;
+        }catch (IOException e){
+            return false;
+        }
+    }
+
+    public String getJsonFile(File f){
+        try{
+            Scanner sc= new Scanner(f);
+            String json="";
+            while(sc.hasNextLine()){
+                json= sc.nextLine();
+            }
+            return json;
+        }catch (FileNotFoundException e){
+            return "ERROR: "+e.getMessage();
+        }
+    }
+
+    public String getExtension(String path){
+        String extension = "";
+
+        int i = path.lastIndexOf('.');
+        int p = Math.max(path.lastIndexOf('/'), path.lastIndexOf('\\'));
+
+        if (i > p) {
+            extension = path.substring(i+1);
+        }
+        return "."+extension;
+    }
+
+    public boolean renameFile(File old, File ne){
+        try{
+            Path source= Paths.get(old.getAbsolutePath());
+            Path target= Paths.get(ne.getAbsolutePath());
+            Files.move(source, target);
+            return true;
+        }catch(IOException e){
+            return false;
+            //return e.getMessage();
+        }
+    }
+
+    public String setPId(String path){
+        try{
+            File f=new File(path);
+            ManageFile m= new Gson().fromJson(getJsonFile(f), ManageFile.class);
+            return String.valueOf(Integer.parseInt(m.getPhotoId())+1);
+        }catch(Exception e){
+            if(createFile(path)){
+                return "1";
+            }else{
+                return "ERROR";
+                //return "ERROR: " + e.getMessage();
+            }
         }
     }
 
@@ -76,13 +151,6 @@ public class ManageFile implements Serializable {
             c[i]= a.get(i);
         }
         return c;
-    }
-
-    public void sedPhotosIds(){
-        photosId= new String[photos.length];
-        for (int i = 0; i < photos.length; i++) {
-            photosId[i]= String.valueOf(i+1);
-        }
     }
 
     public String getUserId() {
@@ -159,5 +227,13 @@ public class ManageFile implements Serializable {
 
     public int getNumberOfUsers() {
         return numberOfUsers;
+    }
+
+    public String getPhotoId() {
+        return photoId;
+    }
+
+    public void setPhotoId(String photoId) {
+        this.photoId = photoId;
     }
 }
