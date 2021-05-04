@@ -10,11 +10,12 @@
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <title>Show Photos</title>
 </head>
-<body>
+<body onload="showTable()">
 <jsp:useBean id = "user" class = "com.example.Workshop4.bean.ManageFile" />
-    <% user.getFile("user.txt"); %>
+    <% out.print(user.getFile("user.json")); %>
     <table class="table">
         <thead>
         <tr>
@@ -26,17 +27,24 @@
         </tr>
         </thead>
         <tbody>
+        <% out.print(user.getNumberOfUsers()); %>
         <% for (int i=0; i<user.getNumberOfUsers(); i++){ %>
         <tr>
             <th scope="row"><% out.print(user.getUsersId(i));%></th>
             <td><% out.print(user.getDescriptions(i));%></td>
             <td><% out.print(user.getDates(i));%></td>
-            <td><% out.print(user.getPhotos(i));%></td>
-            <td><% out.print("ids?");%></td>
+            <td><img src="<% out.print(user.getPhotos(i));%>"/> </td>
+            <td><% out.print(user.getPhotosId(i));%></td>
         </tr>
         <%}%>
         </tbody>
     </table>
+
+<script>
+    function showTable(){
+        //console.log($.getJSON())
+    }
+</script>
 
 
 </body>

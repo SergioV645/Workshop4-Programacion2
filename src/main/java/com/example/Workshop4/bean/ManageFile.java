@@ -4,12 +4,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 
+import javax.ejb.Singleton;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
+@Singleton
 
 public class ManageFile implements Serializable {
 
@@ -126,18 +128,21 @@ public class ManageFile implements Serializable {
             ArrayList<String> de= new ArrayList<String>();
             ArrayList<String> da= new ArrayList<String>();
             ArrayList<String> p= new ArrayList<String>();
+            ArrayList<String> pId= new ArrayList<>();
             while (myReader.hasNextLine()) {
                 String data = myReader.nextLine();
-                String[] d= data.split(";");
-                u.add(d[0]);
-                da.add(d[1]);
-                de.add(d[2]);
-                p.add(d[3]);
-                setUsersId(convertArray(u));
-                setDates(convertArray(da));
-                setDescriptions(convertArray(de));
-                setPhotos(convertArray(p));
+                ManageFile m= new Gson().fromJson(data, ManageFile.class);
+                u.add(m.getUserId());
+                da.add(m.getDate());
+                de.add(m.getDescription());
+                p.add(m.getPhoto());
+                pId.add(m.getPhotoId());
             }
+            setUsersId(convertArray(u));
+            setDates(convertArray(da));
+            setDescriptions(convertArray(de));
+            setPhotos(convertArray(p));
+            setPhotosId(convertArray(pId));
             numberOfUsers= u.size();
             return path;
         }catch (FileNotFoundException e){
@@ -185,8 +190,8 @@ public class ManageFile implements Serializable {
         this.photos = photos;
     }
 
-    public String[] getPhotosId() {
-        return photosId;
+    public String getPhotosId(int i) {
+        return photosId[i];
     }
 
     public void setPhotosId(String[] photosId) {

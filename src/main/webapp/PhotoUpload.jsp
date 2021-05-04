@@ -18,7 +18,6 @@ int photoId= 0;
 <body>
 
 <div class="container">
-<div class="">
     <br>
     <p>Usuario identificado como: <% out.print(request.getCookies()[1].getValue()); %></p>
     <br>
@@ -44,7 +43,10 @@ int photoId= 0;
         </form>
     </div>
 </div>
-</div>
+<script>
+    function sendForm(){
 
+    }
+</script>
 </body>
 </html>

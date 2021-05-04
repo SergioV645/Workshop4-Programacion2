@@ -3,6 +3,7 @@ package com.example.Workshop4;
 
 import com.example.Workshop4.bean.ManageFile;
 
+import javax.ejb.Singleton;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import javax.servlet.annotation.*;
@@ -40,7 +41,7 @@ public class PhotoUpload extends HttpServlet {
         response.sendRedirect("ShowPhotos.jsp");
 
          */
-
+        //response.setContentType("application/json");
         //get the path of the photos folder
         Part f= request.getPart("photoForm");
         File uploadDir = new File("Photos");
@@ -66,9 +67,10 @@ public class PhotoUpload extends HttpServlet {
                 m.setUserId(request.getParameter("userId"));
                 m.setDescription(request.getParameter("description"));
                 m.setDate(request.getParameter("date"));
-                m.setPhoto(absolutePath);
+                m.setPhoto(n.getAbsolutePath());
                 //5-
                 response.getWriter().println(m.saveUserInfo("user.json"));
+                response.sendRedirect("ShowPhotos.jsp");
             }else{
                 response.getWriter().println("error renaming file");
             }
