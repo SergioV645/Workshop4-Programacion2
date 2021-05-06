@@ -13,13 +13,21 @@ int photoId= 0;
 <head>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
     <title>Upload Photo</title>
 </head>
 <body>
 
 <div class="container">
+    <%String userId="";%>
+    <% for(int  i=0;i<request.getCookies().length; i++){   %>
+    <% Cookie c= request.getCookies()[i];%>
+    <% if(c.getName().equals("UserId")){%>
+    <%userId= c.getValue();%>
+    <%}%>
+    <%}%>
     <br>
-    <p>Usuario identificado como: <% out.print(request.getCookies()[1].getValue()); %></p>
+    <p>Usuario identificado como: <% out.print(userId); %></p>
     <br>
     <br>
     <div class="container">
@@ -34,9 +42,7 @@ int photoId= 0;
             <div class="mb-3">
                 <label for="description" class="form-label">Descripción: </label>
                 <textarea id="description" name="description" class="form-control" form="form"></textarea>
-                <%photoId=photoId+1;%>
-                <input type="hidden" id="userId" name="userId" value="<%out.print(request.getCookies()[1].getValue());%>">
-                <input type="hidden" id="photoId" name="photoId" value="<%out.print(request.getCookies()[2].getValue());%>">
+                <input type="hidden" id="userId" name="userId" value="<%out.print(userId);%>">
                 <input type="hidden" id="date" name="date" value="<%out.print(java.time.LocalDate.now());%>">
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
@@ -45,7 +51,9 @@ int photoId= 0;
 </div>
 <script>
     function sendForm(){
-
+        $.getJSON("PhotoUpload", function (data){
+            console.log(data);
+        })
     }
 </script>
 </body>
