@@ -1,9 +1,9 @@
 # Workshop4-programacion2
 ## Integrantes:
 - Sergio Valderrama
-- Juan Beltran
+- Juan David Beltrán
 - William Fonseca
 
-Se utilizo Wildfly
+Se utilizo el servidor de aplicaciones Wildfly
 
-video: 
+Link del video: https://youtu.be/6ergLLyorA0
